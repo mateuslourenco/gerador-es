@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador Zona de Trabalho</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            margin-bottom: 5px;
+        }
+        body {
+            max-width: 600px;
+            margin: auto;
+            background-color: lightskyblue;
+        }
+        main {
+            text-align: center;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+            width: 100%;
+            margin-top: 100px;
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.473);
+            overflow: auto;
+        }
+        textarea {
+            padding: 10px;
+        }
+        input {
+            width: calc(100% / 2);
+            height: 30px;
+            border-radius: 20px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        button {
+            cursor: pointer;
+            width: 120px;
+            height: 30px;
+            border-radius: 20px;
+            border: none;
+            background-color: paleturquoise;
+        }
+        button:hover:enabled {
+            background-color: #2196F3;
+        }
+        button:disabled {
+            cursor: not-allowed;            
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Gerador Zona de Trabalho</h1>
+        <div id="txt-gerador">
+            <textarea name="txt-wfm" id="wfm" cols="60" rows="10" placeholder="Cole as informações do WFM" onchange="gerarZonaDeTrabalho()"></textarea>
+        </div>
+        <div id="txt-resultado">
+            <input type="text" id="resultado" readonly="readonly" disabled="disabled">
+            <button id="btn-resultado" onclick="copiar()" disabled="disabled">Copiar</button>
+        </div>
+    </main>
+    <script>
+        function copiar() {
+            let resultado = document.getElementById('resultado')
+            resultado.select()
+            document.execCommand("copy")
+        }
+        
+        function gerarZonaDeTrabalho() {
+            let strES = "Serviço"
+            let strAT = "Telefonica"
+            let strCNL = "CNL"
+            let txt = document.getElementById("wfm").value
+            let resultado = document.getElementById('resultado')
+            let btnResultado = document.getElementById('btn-resultado')
+
+            let acharES = txt.indexOf(strES) + strES.length + 2
+            let acharAT = txt.indexOf(strAT) + strAT.length + 2
+            let acharCNL = txt.indexOf(strCNL) + strCNL.length + 2
+
+            let ES = txt.substring(acharES, acharES + 2)
+            let AT = txt.substring(acharAT, acharAT + 2)
+            let CNL = txt.substring(acharCNL, acharCNL + 5)
+            let zonaDeTrabalho = `Fibra_${CNL}_${ES}_${AT}`
+            let regex = /Fibra\_[0-9]{5}\_[A-Za-z]{2}\_[A-Za-z]{2}/
+
+
+            if(regex.test(zonaDeTrabalho)) {
+                resultado.setAttribute('value', zonaDeTrabalho)
+                resultado.removeAttribute('disabled')
+                btnResultado.removeAttribute('disabled')
+            } else {
+                resultado.removeAttribute('value')
+                resultado.setAttribute('disabled', 'disabled')
+                btnResultado.setAttribute('disabled', 'disabled')
+            }
+
+        }
+    </script>
+</body>
+</html>
